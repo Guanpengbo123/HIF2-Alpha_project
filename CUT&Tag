@@ -393,7 +393,7 @@ WT30048C1HIF WT71839HIF WT30048C0HIF WT30038C0HIF WT71859C1GATA3 WT71851C1GATA3 
 ######分开一对一对计算
 ##########################
 #HIF2a C1 contral :WT用 WT30048C1IgG KO用 KO30049C1IgG
-#HIF2a C0 contral :WT用WT30048C0IgG KO用KO30049C0IgG
+#HIF2a C0 contral :WT用 WT30048C0IgG KO用KO30049C0IgG
 #GATA3 C1 contral :WT用 WT71859C1IgG KO用 KO-C1-IgG（GATA3C1）
 #GATA3 C0 contral :WT用 WT71859C0IgG KO用 KO71845C0IgG
 ###HIF2a C1
@@ -664,66 +664,7 @@ do
 	bedtools intersect -a SEACR_005/${name}_005.stringent.bed -b ${mmbt} -v >SEACR_005/${name}_005.rmbl.bed
 done
 
-##############第一次探索#####
-####利用merge 2个相关性高的样本 进行macs2 diff分析######
 
-#HIF2a C1 contral :WT用 WT30048C1IgG KO用 KO30049C1IgG 
-#HIF2a C0 contral :WT用 WT30048C0IgG KO用 KO30049C0IgG
-#GATA3 C1 contral :WT用 WT71859C1IgG KO用 KO-C1-IgG（GATA3C1）
-#GATA3 C0 contral :WT用 WT71859C0IgG KO用 KO71845C0IgG
-bgfile='/data/02.private/guanpb/HIF2a/bgfile'
-
-macs2 bdgdiff \
---t1 /data/02.private/guanpb/HIF2a/bgfile/HIF2a_C1_WT_2.bedGraph \
---c1 /data/02.private/guanpb/HIF2a/bgfile/WT30048C1IgG.bedGraph \
---t2 /data/02.private/guanpb/HIF2a/bgfile/HIF2a_C1_KO_2.bedGraph \
---c2 /data/02.private/guanpb/HIF2a/bgfile/KO30049C1IgG.bedGraph \
---outdir HIF2a_C1 -o  HIF2a_C1_WT.bed HIF2a_C1_KO.bed HIF2a_C1_common.bed
-
-macs2 bdgdiff \
---t1 /data/02.private/guanpb/HIF2a/bgfile/HIF2a_C0_WT_2.bedGraph \
---c1 /data/02.private/guanpb/HIF2a/bgfile/WT30048C0IgG.bedGraph \
---t2 /data/02.private/guanpb/HIF2a/bgfile/HIF2a_C0_KO_2.bedGraph \
---c2 /data/02.private/guanpb/HIF2a/bgfile/KO30049C0IgG.bedGraph \
---outdir HIF2a_C0 -o  HIF2a_C0_WT.bed HIF2a_C0_KO.bed HIF2a_C0_common.bed
-
-macs2 bdgdiff \
---t1 /data/02.private/guanpb/HIF2a/bgfile/GATA3_C1_WT_2.bedGraph \
---c1 /data/02.private/guanpb/HIF2a/bgfile/WT71859C1IgG.bedGraph \
---t2 /data/02.private/guanpb/HIF2a/bgfile/GATA3_C1_KO_2.bedGraph \
---c2 /data/02.private/guanpb/HIF2a/bgfile/KO-C1-IgG.bedGraph \
---outdir GATA3_C1 -o  GATA3_C1_WT.bed GATA3_C1_KO.bed GATA3_C1_common.bed
-
-macs2 bdgdiff \
---t1 /data/02.private/guanpb/HIF2a/bgfile/GATA3_C0_WT_2.bedGraph \
---c1 /data/02.private/guanpb/HIF2a/bgfile/WT71859C0IgG.bedGraph \
---t2 /data/02.private/guanpb/HIF2a/bgfile/GATA3_C0_KO_2.bedGraph \
---c2 /data/02.private/guanpb/HIF2a/bgfile/KO71845C0IgG.bedGraph \
---outdir GATA3_C0 -o  GATA3_C0_WT.bed GATA3_C0_KO.bed GATA3_C0_common.bed
-###
-
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/HIF2a_C1/HIF2a_C1_WT_nohead.bed -b /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/GATA3_C1/GATA3_C1_WT_nohead.bed -wa -wb >c1.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/HIF2a_C0/HIF2a_C0_WT_nohead.bed -b /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/GATA3_C0/GATA3_C0_WT_nohead.bed -wa -wb >c2.bed
-
-3100 c1.bed   HIF2a:8511  GATA3:41480
-4777 c2.bed	  HIF2a:12991  GATA3:38369
-
-#######
-
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/HIF2a_C1/HIF2a_C1_WT_nohead.bed -b common_peaks_C1.bed -v > only_HIF2a_C1.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/GATA3_C1/GATA3_C1_WT_nohead.bed -b common_peaks_C1.bed -v > only_GATA3_C1.bed
-######
-
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/HIF2a_C0/HIF2a_C0_WT_nohead.bed -b common_peaks_C0.bed -v > only_HIF2a_C0.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/new_result/GATA3_C0/GATA3_C0_WT_nohead.bed -b common_peaks_C0.bed -v > only_GATA3_C0.bed
-
-   4777 common_peaks_C0.bed
-   3100 common_peaks_C1.bed
-  33833 only_GATA3_C0.bed
-  38562 only_GATA3_C1.bed
-   8253 only_HIF2a_C0.bed
-   5451 only_HIF2a_C1.bed
-#####################
 
 gmtlist='c2.cp.reactome.v7.5.1.symbols c5.go.v7.5.1.symbols Total_kegg'
 
@@ -1069,55 +1010,6 @@ macs2 bdgdiff \
 --t2 /data/02.private/guanpb/HIF2a/bgfile/HIF2a_C0_KO_3.bedGraph \
 --c2 /data/02.private/guanpb/HIF2a/bgfile/KO30049C0IgG.bedGraph \
 --outdir HIF2a_C0 -o  HIF2a_C0_WT.bed HIF2a_C0_KO.bed HIF2a_C0_common.bed
-
-
-#####只有一对样品 找common peaks
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/single_Diff/HIF2a_C1_WT_test_nohead.bed -b /data/02.private/guanpb/HIF2a/MACS2_Diff/GATA3_C1/GATA3_C1_WT_2_nohead.bed -wa -wb >c1.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/single_Diff/HIF2a_C0_WT_3_nohead.bed -b /data/02.private/guanpb/HIF2a/MACS2_Diff/single_Diff/GATA3_C0_WT_1_nohead.bed -wa -wb >c2.bed
-
- c1.bed:896   HIF2a:5226  GATA3:25797  ##C1
- c2.bed:3728  HIF2a:5528  GATA3:27895  ##C0
-
-#######
-
-bedtools intersect -a  -b common_peaks_C1.bed -v > only_HIF2a_C1.bed
-bedtools intersect -a  -b common_peaks_C1.bed -v > only_GATA3_C1.bed
-######
-
-bedtools intersect -a  -b common_peaks_C0.bed -v > only_HIF2a_C0.bed
-bedtools intersect -a  -b common_peaks_C0.bed -v > only_GATA3_C0.bed
-
-   common_peaks_C0.bed
-   common_peaks_C1.bed
-   only_GATA3_C0.bed
-   only_GATA3_C1.bed
-   only_HIF2a_C0.bed
-   only_HIF2a_C1.bed
-
-################
-
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/HIF2a_C1/HIF2a_C1_WT_nohead.bed -b /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/GATA3_C1/GATA3_C1_WT_nohead.bed -wa -wb >c1.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/HIF2a_C0/HIF2a_C0_WT_nohead.bed -b /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/GATA3_C0/GATA3_C0_WT_nohead.bed -wa -wb >c2.bed
-
- c1.bed:5161   HIF2a:13771  GATA3:41480  ##C1
- c2.bed:3232  HIF2a:10002  GATA3:38369  ##C0
-
-
-#######
-
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/HIF2a_C1/HIF2a_C1_WT_nohead.bed -b common_peaks_C1.bed -v > only_HIF2a_C1.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/GATA3_C1/GATA3_C1_WT_nohead.bed -b common_peaks_C1.bed -v > only_GATA3_C1.bed
-######
-
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/HIF2a_C0/HIF2a_C0_WT_nohead.bed -b common_peaks_C0.bed -v > only_HIF2a_C0.bed
-bedtools intersect -a /data/02.private/guanpb/HIF2a/MACS2_Diff/test_diff/GATA3_C0/GATA3_C0_WT_nohead.bed -b common_peaks_C0.bed -v > only_GATA3_C0.bed
-
-   3232 common_peaks_C0.bed
-   5161 common_peaks_C1.bed
-  35249 only_GATA3_C0.bed
-  36707 only_GATA3_C1.bed
-   6798 only_HIF2a_C0.bed
-   8676 only_HIF2a_C1.bed
 
 SAMPLE_NAME='HIF2a_C1_KO_3 HIF2a_C0_KO_3 HIF2a_C0_WT_3'
 for name in $SAMPLE_NAME
