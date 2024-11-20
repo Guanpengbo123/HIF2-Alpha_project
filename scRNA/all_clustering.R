@@ -166,140 +166,140 @@ merge_I5<-merge(m,inh_I5)
 merge_I6<-merge(m,inh_I6)
 merge_I7<-merge(m,inh_I7)
 merge_all<-merge(m,list(inh_I3,inh_I4,inh_I5,inh_I6,inh_I7))
-pancreas.list <- SplitObject(merge_I3, split.by = "batch")
-pancreas.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I3-10X5")]
-for (i in 1:length(pancreas.list)) {
-    pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]], verbose = FALSE)
-    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], selection.method = "vst", nfeatures = 2000,
+object.list <- SplitObject(merge_I3, split.by = "batch")
+object.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I3-10X5")]
+for (i in 1:length(object.list)) {
+    object.list[[i]] <- NormalizeData(object.list[[i]], verbose = FALSE)
+    object.list[[i]] <- FindVariableFeatures(object.list[[i]], selection.method = "vst", nfeatures = 2000,
         verbose = FALSE)
 }
-reference.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
-pancreas.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
-pancreas.integrated <- IntegrateData(anchorset = pancreas.anchors, dims = 1:30)
+reference.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
+object.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
+object.integrated <- IntegrateData(anchorset = object.anchors, dims = 1:30)
 
 
-DefaultAssay(pancreas.integrated) <- "integrated"
+DefaultAssay(object.integrated) <- "integrated"
 # Run the standard workflow for visualization and clustering
-pancreas.integrated <- ScaleData(pancreas.integrated, verbose = FALSE)
-pancreas.integrated <- RunPCA(pancreas.integrated, npcs = 30, verbose = FALSE)
-pancreas.integrated <- RunUMAP(pancreas.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
+object.integrated <- ScaleData(object.integrated, verbose = FALSE)
+object.integrated <- RunPCA(object.integrated, npcs = 30, verbose = FALSE)
+object.integrated <- RunUMAP(object.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
 
-pancreas.query <- pancreas.list[["I3-10X5"]]
-pancreas.anchors <- FindTransferAnchors(reference = pancreas.integrated, query = pancreas.query,
+object.query <- object.list[["I3-10X5"]]
+object.anchors <- FindTransferAnchors(reference = object.integrated, query = object.query,
     dims = 1:30)
-predictions <- TransferData(anchorset = pancreas.anchors, refdata = pancreas.integrated$class,
+predictions <- TransferData(anchorset = object.anchors, refdata = object.integrated$class,
     dims = 1:30)
-pancreas.query <- AddMetaData(pancreas.query, metadata = predictions)
+object.query <- AddMetaData(object.query, metadata = predictions)
 
-I3_predclass<-pancreas.query
+I3_predclass<-object.query
 
-pancreas.list <- SplitObject(merge_I4, split.by = "batch")
-pancreas.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I4-10X5")]
-for (i in 1:length(pancreas.list)) {
-    pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]], verbose = FALSE)
-    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], selection.method = "vst", nfeatures = 2000,
+object.list <- SplitObject(merge_I4, split.by = "batch")
+object.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I4-10X5")]
+for (i in 1:length(object.list)) {
+    object.list[[i]] <- NormalizeData(object.list[[i]], verbose = FALSE)
+    object.list[[i]] <- FindVariableFeatures(object.list[[i]], selection.method = "vst", nfeatures = 2000,
         verbose = FALSE)
 }
-reference.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
-pancreas.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
-pancreas.integrated <- IntegrateData(anchorset = pancreas.anchors, dims = 1:30)
-DefaultAssay(pancreas.integrated) <- "integrated"
+reference.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
+object.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
+object.integrated <- IntegrateData(anchorset = object.anchors, dims = 1:30)
+DefaultAssay(object.integrated) <- "integrated"
 # Run the standard workflow for visualization and clustering
-pancreas.integrated <- ScaleData(pancreas.integrated, verbose = FALSE)
-pancreas.integrated <- RunPCA(pancreas.integrated, npcs = 30, verbose = FALSE)
-pancreas.integrated <- RunUMAP(pancreas.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
-pancreas.query <- pancreas.list[["I4-10X5"]]
-pancreas.anchors <- FindTransferAnchors(reference = pancreas.integrated, query = pancreas.query,
+object.integrated <- ScaleData(object.integrated, verbose = FALSE)
+object.integrated <- RunPCA(object.integrated, npcs = 30, verbose = FALSE)
+object.integrated <- RunUMAP(object.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
+object.query <- object.list[["I4-10X5"]]
+object.anchors <- FindTransferAnchors(reference = object.integrated, query = object.query,
     dims = 1:30)
-predictions <- TransferData(anchorset = pancreas.anchors, refdata = pancreas.integrated$class,
+predictions <- TransferData(anchorset = object.anchors, refdata = object.integrated$class,
     dims = 1:30)
-pancreas.query <- AddMetaData(pancreas.query, metadata = predictions)
-I4_predclass<-pancreas.query
+object.query <- AddMetaData(object.query, metadata = predictions)
+I4_predclass<-object.query
 
-pancreas.list <- SplitObject(merge_I5, split.by = "batch")
-pancreas.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I5-10X5")]
-for (i in 1:length(pancreas.list)) {
-    pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]], verbose = FALSE)
-    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], selection.method = "vst", nfeatures = 2000,
+object.list <- SplitObject(merge_I5, split.by = "batch")
+object.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I5-10X5")]
+for (i in 1:length(object.list)) {
+    object.list[[i]] <- NormalizeData(object.list[[i]], verbose = FALSE)
+    object.list[[i]] <- FindVariableFeatures(object.list[[i]], selection.method = "vst", nfeatures = 2000,
         verbose = FALSE)
 }
-reference.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
-pancreas.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
-pancreas.integrated <- IntegrateData(anchorset = pancreas.anchors, dims = 1:30)
-DefaultAssay(pancreas.integrated) <- "integrated"
+reference.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
+object.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
+object.integrated <- IntegrateData(anchorset = object.anchors, dims = 1:30)
+DefaultAssay(object.integrated) <- "integrated"
 # Run the standard workflow for visualization and clustering
-pancreas.integrated <- ScaleData(pancreas.integrated, verbose = FALSE)
-pancreas.integrated <- RunPCA(pancreas.integrated, npcs = 30, verbose = FALSE)
-pancreas.integrated <- RunUMAP(pancreas.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
+object.integrated <- ScaleData(object.integrated, verbose = FALSE)
+object.integrated <- RunPCA(object.integrated, npcs = 30, verbose = FALSE)
+object.integrated <- RunUMAP(object.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
 
-pancreas.list <- SplitObject(merge_I5, split.by = "batch")
-pancreas.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I5-10X5")]
-for (i in 1:length(pancreas.list)) {
-    pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]], verbose = FALSE)
-    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], selection.method = "vst", nfeatures = 2000,
+object.list <- SplitObject(merge_I5, split.by = "batch")
+object.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I5-10X5")]
+for (i in 1:length(object.list)) {
+    object.list[[i]] <- NormalizeData(object.list[[i]], verbose = FALSE)
+    object.list[[i]] <- FindVariableFeatures(object.list[[i]], selection.method = "vst", nfeatures = 2000,
         verbose = FALSE)
 }
-reference.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
-pancreas.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
-pancreas.integrated <- IntegrateData(anchorset = pancreas.anchors, dims = 1:30)
-DefaultAssay(pancreas.integrated) <- "integrated"
+reference.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
+object.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
+object.integrated <- IntegrateData(anchorset = object.anchors, dims = 1:30)
+DefaultAssay(object.integrated) <- "integrated"
 # Run the standard workflow for visualization and clustering
-pancreas.integrated <- ScaleData(pancreas.integrated, verbose = FALSE)
-pancreas.integrated <- RunPCA(pancreas.integrated, npcs = 30, verbose = FALSE)
-pancreas.integrated <- RunUMAP(pancreas.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
-pancreas.query <- pancreas.list[["I5-10X5"]]
-pancreas.anchors <- FindTransferAnchors(reference = pancreas.integrated, query = pancreas.query,
+object.integrated <- ScaleData(object.integrated, verbose = FALSE)
+object.integrated <- RunPCA(object.integrated, npcs = 30, verbose = FALSE)
+object.integrated <- RunUMAP(object.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
+object.query <- object.list[["I5-10X5"]]
+object.anchors <- FindTransferAnchors(reference = object.integrated, query = object.query,
     dims = 1:30,k.filter = 140)
-predictions <- TransferData(anchorset = pancreas.anchors, refdata = pancreas.integrated$class,
+predictions <- TransferData(anchorset = object.anchors, refdata = object.integrated$class,
     dims = 1:30)
-pancreas.query <- AddMetaData(pancreas.query, metadata = predictions)
-I5_predclass<-pancreas.query
+object.query <- AddMetaData(object.query, metadata = predictions)
+I5_predclass<-object.query
 
-pancreas.list <- SplitObject(merge_I6, split.by = "batch")
-pancreas.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I6-10X5")]
-for (i in 1:length(pancreas.list)) {
-    pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]], verbose = FALSE)
-    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], selection.method = "vst", nfeatures = 2000,
+object.list <- SplitObject(merge_I6, split.by = "batch")
+object.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I6-10X5")]
+for (i in 1:length(object.list)) {
+    object.list[[i]] <- NormalizeData(object.list[[i]], verbose = FALSE)
+    object.list[[i]] <- FindVariableFeatures(object.list[[i]], selection.method = "vst", nfeatures = 2000,
         verbose = FALSE)
 }
-reference.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
-pancreas.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
-pancreas.integrated <- IntegrateData(anchorset = pancreas.anchors, dims = 1:30)
-DefaultAssay(pancreas.integrated) <- "integrated"
+reference.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
+object.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
+object.integrated <- IntegrateData(anchorset = object.anchors, dims = 1:30)
+DefaultAssay(object.integrated) <- "integrated"
 # Run the standard workflow for visualization and clustering
-pancreas.integrated <- ScaleData(pancreas.integrated, verbose = FALSE)
-pancreas.integrated <- RunPCA(pancreas.integrated, npcs = 30, verbose = FALSE)
-pancreas.integrated <- RunUMAP(pancreas.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
-pancreas.query <- pancreas.list[["I6-10X5"]]
-pancreas.anchors <- FindTransferAnchors(reference = pancreas.integrated, query = pancreas.query,
+object.integrated <- ScaleData(object.integrated, verbose = FALSE)
+object.integrated <- RunPCA(object.integrated, npcs = 30, verbose = FALSE)
+object.integrated <- RunUMAP(object.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
+object.query <- object.list[["I6-10X5"]]
+object.anchors <- FindTransferAnchors(reference = object.integrated, query = object.query,
     dims = 1:30)
-predictions <- TransferData(anchorset = pancreas.anchors, refdata = pancreas.integrated$class,
+predictions <- TransferData(anchorset = object.anchors, refdata = object.integrated$class,
     dims = 1:30)
-pancreas.query <- AddMetaData(pancreas.query, metadata = predictions)
-I6_predclass<-pancreas.query
+object.query <- AddMetaData(object.query, metadata = predictions)
+I6_predclass<-object.query
 
-pancreas.list <- SplitObject(merge_I7, split.by = "batch")
-pancreas.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I7-10X5")]
-for (i in 1:length(pancreas.list)) {
-    pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]], verbose = FALSE)
-    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], selection.method = "vst", nfeatures = 2000,
+object.list <- SplitObject(merge_I7, split.by = "batch")
+object.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5","I7-10X5")]
+for (i in 1:length(object.list)) {
+    object.list[[i]] <- NormalizeData(object.list[[i]], verbose = FALSE)
+    object.list[[i]] <- FindVariableFeatures(object.list[[i]], selection.method = "vst", nfeatures = 2000,
         verbose = FALSE)
 }
-reference.list <- pancreas.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
-pancreas.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
-pancreas.integrated <- IntegrateData(anchorset = pancreas.anchors, dims = 1:30)
-DefaultAssay(pancreas.integrated) <- "integrated"
+reference.list <- object.list[c("K3-10X5", "K4-10X5", "W1-10X5","W2-10X5", "W3-10X5","W4-10X5")]
+object.anchors <- FindIntegrationAnchors(object.list = reference.list, dims = 1:30)
+object.integrated <- IntegrateData(anchorset = object.anchors, dims = 1:30)
+DefaultAssay(object.integrated) <- "integrated"
 # Run the standard workflow for visualization and clustering
-pancreas.integrated <- ScaleData(pancreas.integrated, verbose = FALSE)
-pancreas.integrated <- RunPCA(pancreas.integrated, npcs = 30, verbose = FALSE)
-pancreas.integrated <- RunUMAP(pancreas.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
-pancreas.query <- pancreas.list[["I7-10X5"]]
-pancreas.anchors <- FindTransferAnchors(reference = pancreas.integrated, query = pancreas.query,
+object.integrated <- ScaleData(object.integrated, verbose = FALSE)
+object.integrated <- RunPCA(object.integrated, npcs = 30, verbose = FALSE)
+object.integrated <- RunUMAP(object.integrated, reduction = "pca", dims = 1:30, verbose = FALSE)
+object.query <- object.list[["I7-10X5"]]
+object.anchors <- FindTransferAnchors(reference = object.integrated, query = object.query,
     dims = 1:30)
-predictions <- TransferData(anchorset = pancreas.anchors, refdata = pancreas.integrated$class,
+predictions <- TransferData(anchorset = object.anchors, refdata = object.integrated$class,
     dims = 1:30)
-pancreas.query <- AddMetaData(pancreas.query, metadata = predictions)
-I7_predclass<-pancreas.query
+object.query <- AddMetaData(object.query, metadata = predictions)
+I7_predclass<-object.query
 Th2$predicted.id<-Th2$class
 Idents(Hif2a_Th2_3)<-"predicted.id"
 object<-merge(Th2,list(I3_predclass,I4_predclass,I5_predclass,I6_predclass,I7_predclass))
